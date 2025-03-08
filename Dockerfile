@@ -1,13 +1,9 @@
-# ใช้ OpenResty Alpine เป็น Base Image (Nginx + Lua)
 FROM openresty/openresty:alpine
 
 # ติดตั้ง SQLite และ wget ด้วย apk
-RUN apk update && apk add --no-cache \
-    sqlite \
-    sqlite-dev \
-    wget
+RUN apk update && apk add --no-cache sqlite sqlite-dev wget
 
-# คัดลอกไฟล์ config ของ Nginx (OpenResty)
+# คัดลอกไฟล์ config ของ Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # คัดลอกไฟล์ init script
@@ -21,5 +17,5 @@ RUN sqlite3 /var/www/html/urls.db "CREATE TABLE IF NOT EXISTS urls (original TEX
 # เปิดพอร์ต 80
 EXPOSE 80
 
-# รัน init script แล้วเริ่มต้น OpenResty (Nginx)
-CMD ["/bin/bash", "-c", "/init.sh && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+# รัน OpenResty (Nginx)
+CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]
