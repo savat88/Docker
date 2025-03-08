@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-# ติดตั้ง dependencies ที่จำเป็น รวมถึง OpenSSL และอื่น ๆ
+# ติดตั้ง dependencies ที่จำเป็น
 RUN apk update && apk add --no-cache \
     build-base \
     libtool \
@@ -18,11 +18,10 @@ RUN apk update && apk add --no-cache \
     bash \
     && rm -rf /var/cache/apk/*
 
-# ดาวน์โหลด Nginx จาก source
+# ดาวน์โหลด Nginx และ OpenSSL
 RUN wget http://nginx.org/download/nginx-1.23.1.tar.gz && \
     tar -zxvf nginx-1.23.1.tar.gz
 
-# ดาวน์โหลด OpenSSL จากแหล่งทางการ
 RUN wget https://www.openssl.org/source/openssl-1.1.1k.tar.gz && \
     tar -zxvf openssl-1.1.1k.tar.gz
 
