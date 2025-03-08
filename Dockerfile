@@ -1,8 +1,12 @@
-# ใช้ OpenResty (Alpine-based) เป็น Base Image
+# ใช้ OpenResty เป็น Base Image
 FROM openresty/openresty:alpine
 
-# ติดตั้ง SQLite และ wget
+# ติดตั้ง SQLite และ wget ด้วย apk
 RUN apk update && apk add --no-cache sqlite sqlite-dev wget
+
+# ตรวจสอบว่า LuaJIT และ lsqlite3 ติดตั้งแล้ว
+RUN opm install ledgetech/lua-resty-http
+RUN opm install lua-sql/sqlite3
 
 # คัดลอกไฟล์ config ของ Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -18,5 +22,5 @@ RUN sqlite3 /var/www/html/urls.db "CREATE TABLE IF NOT EXISTS urls (original TEX
 # เปิดพอร์ต 80
 EXPOSE 80
 
-# รัน OpenResty (Nginx)
+# รัน OpenResty
 CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]
