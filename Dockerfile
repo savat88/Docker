@@ -1,16 +1,13 @@
-# ใช้ Ubuntu เป็น Base Image
-FROM ubuntu:latest
+# ใช้ OpenResty เป็น Base Image (Nginx + Lua)
+FROM openresty/openresty:alpine
 
-# ติดตั้ง Nginx, Lua, SQLite, และ wget
-RUN apt update && apt install -y \
-    nginx \
-    lua5.3 \
-    liblua5.3-dev \
+# ติดตั้ง SQLite และ wget
+RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev \
     wget
 
-# คัดลอกไฟล์ config ของ Nginx
+# คัดลอกไฟล์ config ของ Nginx (OpenResty)
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # คัดลอกไฟล์ init script
@@ -24,5 +21,5 @@ RUN sqlite3 /var/www/html/urls.db "CREATE TABLE IF NOT EXISTS urls (original TEX
 # เปิดพอร์ต 80
 EXPOSE 80
 
-# รัน init script
-CMD ["/init.sh"]
+# รัน init script แล้วเริ่มต้น OpenResty (Nginx)
+CMD ["/bin/bash", "-c", "/init.sh && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
