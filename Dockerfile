@@ -1,7 +1,9 @@
 FROM openresty/openresty:alpine
 
-# ติดตั้ง SQLite และ wget ด้วย apk
-RUN apk update && apk add --no-cache sqlite sqlite-dev wget
+# ติดตั้ง SQLite, Lua และ wget ด้วย apk
+RUN apk update && apk add --no-cache \
+    sqlite sqlite-dev wget \
+    lua5.3 lua5.3-dev lua5.3-sqlite
 
 # คัดลอกไฟล์ config ของ Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
