@@ -1,7 +1,6 @@
-# ใช้ Alpine image สำหรับติดตั้ง dependencies
 FROM alpine:latest
 
-# ติดตั้ง dependencies ที่จำเป็น รวมถึง OpenSSL
+# ติดตั้ง dependencies ที่จำเป็น รวมถึง OpenSSL และอื่น ๆ
 RUN apk update && apk add --no-cache \
     build-base \
     libtool \
@@ -16,6 +15,7 @@ RUN apk update && apk add --no-cache \
     curl \
     openssl \
     openssl-dev \
+    bash \
     && rm -rf /var/cache/apk/*
 
 # ดาวน์โหลด Nginx จาก source
