@@ -1,5 +1,5 @@
-# ใช้ OpenResty (Ubuntu Base)
-FROM openresty/openresty:ubuntu
+# ใช้ OpenResty (Debian Base)
+FROM openresty/openresty:latest
 
 # ติดตั้ง SQLite, wget และ OPM
 RUN apt update && apt install -y \
@@ -8,10 +8,6 @@ RUN apt update && apt install -y \
     wget \
     curl \
     unzip
-
-# ติดตั้ง OPM (OpenResty Package Manager)
-RUN curl -fsSL https://openresty.org/opm -o /usr/local/bin/opm && \
-    chmod +x /usr/local/bin/opm
 
 # ติดตั้ง Lua Modules ที่จำเป็น
 RUN opm get ledgetech/lua-resty-http
