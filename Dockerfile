@@ -1,12 +1,21 @@
-# ใช้ OpenResty เป็น Base Image
-FROM openresty/openresty:alpine
+# ใช้ OpenResty (Ubuntu Base)
+FROM openresty/openresty:ubuntu
 
-# ติดตั้ง SQLite และ wget ด้วย apk
-RUN apk update && apk add --no-cache sqlite sqlite-dev wget
+# ติดตั้ง SQLite, wget และ OPM
+RUN apt update && apt install -y \
+    sqlite3 \
+    libsqlite3-dev \
+    wget \
+    curl \
+    unzip
 
-# ตรวจสอบว่า LuaJIT และ lsqlite3 ติดตั้งแล้ว
-RUN opm install ledgetech/lua-resty-http
-RUN opm install lua-sql/sqlite3
+# ติดตั้ง OPM (OpenResty Package Manager)
+RUN curl -fsSL https://openresty.org/opm -o /usr/local/bin/opm && \
+    chmod +x /usr/local/bin/opm
+
+# ติดตั้ง Lua Modules ที่จำเป็น
+RUN opm get ledgetech/lua-resty-http
+RUN opm get lua-sql/sqlite3
 
 # คัดลอกไฟล์ config ของ Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
