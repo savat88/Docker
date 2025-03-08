@@ -1,21 +1,18 @@
 # ใช้ OpenResty (Debian Base)
 FROM openresty/openresty:latest
 
-# ติดตั้ง SQLite, wget และ curl
+# ติดตั้ง SQLite, wget, curl, unzip และ luarocks
 RUN apt update && apt install -y \
     sqlite3 \
     libsqlite3-dev \
     wget \
     curl \
-    unzip
-
-# **ติดตั้ง OPM**
-RUN curl -fsSL https://raw.githubusercontent.com/openresty/opm/master/bin/opm -o /usr/local/bin/opm \
-    && chmod +x /usr/local/bin/opm
+    unzip \
+    luarocks
 
 # **ติดตั้ง Lua Modules ที่จำเป็น**
-RUN opm get ledgetech/lua-resty-http
-RUN opm get tao-lua/sqlite3
+RUN luarocks install lua-resty-http
+RUN luarocks install luasql-sqlite3
 
 # คัดลอกไฟล์ config ของ Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
