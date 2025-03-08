@@ -1,39 +1,28 @@
-# Stage 1: build
-FROM ubuntu:20.04 AS builder
+# ใช้ Ubuntu เป็น Base Image
+FROM ubuntu:latest
 
-# ติดตั้ง dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libtool \
-    autoconf \
-    gcc \
-    make \
-    pcre3-dev \
-    zlib1g-dev \
-    git \
-    wget \
-    curl \
-    libssl-dev
+# ติดตั้ง Nginx, Lua, SQLite, และ wget
+RUN apt update && apt install -y \
+    nginx \
+    lua5.3 \
+    liblua5.3-dev \
+    sqlite3 \
+    libsqlite3-dev \
+    wget
 
-# ดาวน์โหลดและคอมไพล์ nginx และ rtmp module
-RUN wget http://nginx.org/download/nginx-1.23.1.tar.gz && \
-    tar -zxvf nginx-1.23.1.tar.gz
+# คัดลอกไฟล์ config ของ Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN git clone https://github.com/arut/nginx-rtmp-module /nginx-rtmp-module
+# คัดลอกไฟล์ init script
+COPY init.sh /init.sh
+RUN chmod +x /init.sh
 
-WORKDIR nginx-1.23.1
-RUN ./configure --with-compat --with-openssl=/openssl-1.1.1k --add-dynamic-module=/nginx-rtmp-module && \
-    make && \
-    make install
+# สร้างโฟลเดอร์สำหรับ HLS และฐานข้อมูล
+RUN mkdir -p /var/www/html/hls
+RUN sqlite3 /var/www/html/urls.db "CREATE TABLE IF NOT EXISTS urls (original TEXT PRIMARY KEY, converted TEXT);"
 
-# Stage 2: runtime
-FROM ubuntu:20.04
+# เปิดพอร์ต 80
+EXPOSE 80
 
-# คัดลอกไฟล์จาก builder
-COPY --from=builder /usr/local/nginx /usr/local/nginx
-
-# เปิดพอร์ตที่ใช้
-EXPOSE 1935 8080
-
-# คำสั่งเริ่ม nginx
-CMD ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
+# รัน init script
+CMD ["/init.sh"]
