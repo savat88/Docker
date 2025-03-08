@@ -1,10 +1,10 @@
-# ใช้ OpenResty เป็น Base Image (Nginx + Lua)
+# ใช้ OpenResty Alpine เป็น Base Image (Nginx + Lua)
 FROM openresty/openresty:alpine
 
-# ติดตั้ง SQLite และ wget
-RUN apt-get update && apt-get install -y \
-    sqlite3 \
-    libsqlite3-dev \
+# ติดตั้ง SQLite, wget และ dependencies ที่จำเป็น
+RUN apk update && apk add \
+    sqlite \
+    sqlite-dev \
     wget
 
 # คัดลอกไฟล์ config ของ Nginx (OpenResty)
