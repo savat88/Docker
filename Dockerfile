@@ -22,12 +22,16 @@ RUN apk update && apk add --no-cache \
 RUN wget http://nginx.org/download/nginx-1.23.1.tar.gz && \
     tar -zxvf nginx-1.23.1.tar.gz
 
+# ดาวน์โหลด OpenSSL จากแหล่งทางการ
+RUN wget https://www.openssl.org/source/openssl-1.1.1k.tar.gz && \
+    tar -zxvf openssl-1.1.1k.tar.gz
+
 # ดาวน์โหลด RTMP module
 RUN git clone https://github.com/arut/nginx-rtmp-module /nginx-rtmp-module
 
 # คอมไพล์ Nginx พร้อม RTMP module และ OpenSSL
 WORKDIR nginx-1.23.1
-RUN ./configure --with-compat --with-openssl --add-dynamic-module=/nginx-rtmp-module || tail -n 10 /tmp/configure.log
+RUN ./configure --with-compat --with-openssl=/openssl-1.1.1k --add-dynamic-module=/nginx-rtmp-module || tail -n 10 /tmp/configure.log
 RUN make || tail -n 10 /tmp/make.log && \
     make install
 
