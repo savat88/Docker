@@ -1,8 +1,9 @@
 # ใช้ OpenResty (Debian Base)
 FROM openresty/openresty:latest
 
-# ติดตั้ง SQLite, wget, curl, unzip และ luarocks
+# ติดตั้ง Git, SQLite, wget, curl, unzip และ Luarocks
 RUN apt update && apt install -y \
+    git \
     sqlite3 \
     libsqlite3-dev \
     wget \
