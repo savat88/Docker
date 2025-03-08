@@ -2,7 +2,7 @@ services:
   - name: nginx-lua-sqlite
     type: web
     runtime: docker
-    repo: https://github.com/your-repo/nginx-lua-sqlite
+    repo: https://github.com/savat88/Docker.git  # เปลี่ยน URL ของ repository ที่นี่
     plan: free
     envVars:
       - key: PORT
