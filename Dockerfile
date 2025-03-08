@@ -1,7 +1,7 @@
-# Use the official Nginx image from Docker Hub
+# ใช้ Nginx Base Image
 FROM nginx:alpine
 
-# Install dependencies for RTMP module
+# ติดตั้ง dependencies ที่จำเป็น รวมถึง git
 RUN apk add --no-cache \
     build-base \
     libtool \
@@ -10,16 +10,17 @@ RUN apk add --no-cache \
     make \
     pcre-dev \
     zlib-dev \
+    git \
     && rm -rf /var/cache/apk/*
 
-# Download and install the Nginx RTMP module
+# ดาวน์โหลดและติดตั้ง RTMP module
 RUN git clone https://github.com/arut/nginx-rtmp-module /nginx-rtmp-module
 
-# Copy Nginx configuration file (nginx.conf) into the container
+# คัดลอกไฟล์ nginx.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose the necessary ports
+# เปิดพอร์ตที่จำเป็น
 EXPOSE 1935
 
-# Start Nginx
+# เริ่ม Nginx
 CMD ["nginx", "-g", "daemon off;"]
