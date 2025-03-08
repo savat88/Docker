@@ -31,7 +31,7 @@ RUN git clone https://github.com/arut/nginx-rtmp-module /nginx-rtmp-module
 
 # คอมไพล์ Nginx พร้อม RTMP module และ OpenSSL
 WORKDIR nginx-1.23.1
-RUN ./configure --with-compat --with-openssl=/openssl-1.1.1k --add-dynamic-module=/nginx-rtmp-module || tail -n 10 /tmp/configure.log
+RUN ./configure --with-compat --with-openssl=/openssl-1.1.1k --with-rtmp=/nginx-rtmp-module || tail -n 10 /tmp/configure.log
 RUN make || tail -n 10 /tmp/make.log && \
     make install
 
