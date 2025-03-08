@@ -1,7 +1,7 @@
 # ใช้ Alpine image สำหรับติดตั้ง dependencies
 FROM alpine:latest
 
-# ติดตั้ง dependencies ที่จำเป็น
+# ติดตั้ง dependencies ที่จำเป็น รวมถึง OpenSSL
 RUN apk update && apk add --no-cache \
     build-base \
     libtool \
@@ -14,6 +14,8 @@ RUN apk update && apk add --no-cache \
     linux-headers \
     wget \
     curl \
+    openssl \
+    openssl-dev \
     && rm -rf /var/cache/apk/*
 
 # ดาวน์โหลด Nginx จาก source
@@ -23,10 +25,10 @@ RUN wget http://nginx.org/download/nginx-1.23.1.tar.gz && \
 # ดาวน์โหลด RTMP module
 RUN git clone https://github.com/arut/nginx-rtmp-module /nginx-rtmp-module
 
-# คอมไพล์ Nginx พร้อม RTMP module
+# คอมไพล์ Nginx พร้อม RTMP module และ OpenSSL
 WORKDIR nginx-1.23.1
-RUN ./configure --with-compat --add-dynamic-module=/nginx-rtmp-module && \
-    make && \
+RUN ./configure --with-compat --with-openssl --add-dynamic-module=/nginx-rtmp-module || tail -n 10 /tmp/configure.log
+RUN make || tail -n 10 /tmp/make.log && \
     make install
 
 # คัดลอกไฟล์ nginx.conf ที่กำหนด
