@@ -1,8 +1,8 @@
 # ใช้ OpenResty Alpine เป็น Base Image (Nginx + Lua)
 FROM openresty/openresty:alpine
 
-# ติดตั้ง SQLite, wget และ dependencies ที่จำเป็น
-RUN apk update && apk add \
+# ติดตั้ง SQLite และ wget ด้วย apk
+RUN apk update && apk add --no-cache \
     sqlite \
     sqlite-dev \
     wget
